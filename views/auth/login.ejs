@@ -7,16 +7,39 @@
    <%- include('../includes/navigation.ejs') %>
 
     <main>
+        <% if (errors.length > 0) {
+          errors.map(error => { %>
+            <div class="user-message user-message--error"><%= error.msg %></div>
+        <% })
+        } else if (successMsg) { %>
+          <div class="user-message"><%= successMsg %></div>
+        <% } %>
         <form class="login-form" action="/login" method="POST">
             <div class="form-control">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email">
+                <input 
+                  class="<%= errors.find(({ param }) => (param === 'email' || param === 'all')) ? 'invalid' : '' %>"
+                  type="email" 
+                  name="email" 
+                  id="email"
+                  value="<%= inputValues.email %>"
+                >
             </div>
             <div class="form-control">
               <label for="password">Password</label>
-              <input type="password" name="password" id="password">
+              <input 
+                class="<%= errors.find(({ param }) => (param === 'all')) ? 'invalid' : '' %>"
+                type="password" 
+                name="password" 
+                id="password"
+                value="<%= inputValues.password %>"
+              >
           </div>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button class="btn" type="submit">Login</button>
+          <div class="centered">
+            <a href="/reset">Reset Password</a>
+          </div>
         </form>
     </main>
 <%- include('../includes/end.ejs') %>

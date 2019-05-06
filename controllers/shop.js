@@ -7,7 +7,8 @@ exports.getProducts = (req, res, next) => {
       res.render('shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
-        path: '/products'
+        path: '/products',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));  
@@ -20,7 +21,8 @@ exports.getProduct = (req, res, next) => {
       res.render('shop/product-detail', {
         pageTitle: product.title,
         product: product,
-        path: '/products'
+        path: '/products',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
@@ -32,7 +34,8 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         prods: products,
         pageTitle: 'Shop',
-        path: '/'
+        path: '/',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));  
@@ -48,7 +51,8 @@ exports.getCart = (req, res, next) => {
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
-        items: items
+        items: items,
+        isAuthenticated: req.session.isLoggedIn
       }); 
     })      
     .catch(err => console.log(err));
@@ -86,8 +90,6 @@ exports.postOrder = (req, res, next) => {
     .populate('cart.items.productId')
     .execPopulate()
     .then(user => {
-      console.log(JSON.stringify(user.cart.items, null, 4));
-
       const items = user.cart.items.map(item => {
         return { product: item.productId, quantity: item.quantity };
       });
